@@ -15,6 +15,12 @@ pipeline {
 					} else if (env.BRANCH_NAME == 'develop' || env.BRANCH_NAME.startsWith('feature')) {
 						echo 'I execute develop or feature'
 						env.PORT=5234
+
+
+
+
+
+						
 					}
 				}
 			}
