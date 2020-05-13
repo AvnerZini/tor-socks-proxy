@@ -28,9 +28,7 @@ pipeline {
 		}
 		stage('Push the docker image to docker hub') {
 			steps {
-				with credantuails
 				sh """
-					docker login
 					docker push avzini/tor-socks-proxy:${env.BUILD_NUMBER}
                     """
 			}
