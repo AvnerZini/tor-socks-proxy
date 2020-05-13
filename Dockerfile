@@ -1,5 +1,7 @@
 FROM alpine:3.11
 
+ARG PORT=9150
+
 LABEL maintainer="Peter Dave Hello <hsu@peterdavehello.org>"
 LABEL name="tor-socks-proxy"
 LABEL version="latest"
@@ -13,8 +15,8 @@ RUN echo '@edge http://dl-cdn.alpinelinux.org/alpine/edge/community' >> /etc/apk
 COPY torrc /etc/tor/
 
 HEALTHCHECK --timeout=10s --start-period=60s \
-    CMD curl --fail --socks5-hostname localhost:9150 -I -L 'https://www.facebookcorewwwi.onion/' || exit 1
+    CMD curl --fail --socks5-hostname localhost:$PORT -I -L 'https://www.facebookcorewwwi.onion/' || exit 1
 
-EXPOSE 9150
+EXPOSE $PORT
 
 CMD ["/usr/bin/tor", "-f", "/etc/tor/torrc"]

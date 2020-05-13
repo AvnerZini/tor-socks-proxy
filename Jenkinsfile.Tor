@@ -6,19 +6,47 @@ pipeline {
 	}
 
 	stages {
-		stage('Build docker images') {
+		stage('prep') {
 			steps {
-				sh '''
-					echo "================= start ==================="
-                    '''
+				script {
+					if (env.BRANCH_NAME.startsWith('release')) {
+						echo 'I only execute on the release branch'
+						env.PORT=7293
+					} else if (env.BRANCH_NAME == 'develop' || env.BRANCH_NAME.startsWith('feature')) {
+						echo 'I execute develop or feature'
+						env.PORT=5234
+					}
+				}
 			}
 		}
-
-	}
-	post {
-		cleanup {
-			cleanWs()
+		stage('Build a docker image') {
+			steps {
+				sh """
+					docker build --build-arg PORT=$PORT -t avzini/tor-socks-proxy:${env.BUILD_NUMBER} . 
+                    """
+			}
 		}
+		stage('Push the docker image to docker hub') {
+			steps {
+				with credantuails
+				sh """
+					docker login
+					docker push avzini/tor-socks-proxy:${env.BUILD_NUMBER}
+                    """
+			}
+		}
+	}
+
+	post {
+		success{
+			echo "======== Trigger Jenkinsfile.Test ========"
+			script{
+				build job: 'job name', parameters: [string(name: 'image_name', value: "avzini/tor-socks-proxy:${env.BUILD_NUMBER}")]
+			}
+		}
+//		cleanup {
+//			cleanWs()
+//		}
 	}
 }
 
