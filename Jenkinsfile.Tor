@@ -9,10 +9,6 @@ pipeline {
 		stage('prep') {
 			steps {
 				script {
-					sh """
-						echo ==============(${env.BRANCH_NAME})===================
-						"""
-
 					if (env.BRANCH_NAME.startsWith('release')) {
 						echo 'I only execute on the release branch'
 						env.PORT=7293
