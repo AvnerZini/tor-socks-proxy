@@ -16,11 +16,6 @@ pipeline {
 						echo 'I execute develop or feature'
 						env.PORT=5234
 
-
-
-
-
-						
 					}
 				}
 			}
