@@ -30,22 +30,23 @@ pipeline {
 		stage('Push the docker image to docker hub') {
 			steps {
 				sh """
+					docker login -u avzini -p TUMrWrD9VNyHTah
 					docker push avzini/tor-socks-proxy:${env.BUILD_NUMBER}
                     """
 			}
 		}
 	}
 
-	post {
-		success{
-			echo "======== Trigger Jenkinsfile.Test ========"
-			script{
-				build job: 'job name', parameters: [string(name: 'image_name', value: "avzini/tor-socks-proxy:${env.BUILD_NUMBER}")]
-			}
-		}
+//	post {
+//		success{
+//			echo "======== Trigger Jenkinsfile.Test ========"
+//			script{
+//				build job: 'job name', parameters: [string(name: 'image_name', value: "avzini/tor-socks-proxy:${env.BUILD_NUMBER}")]
+//			}
+//		}
 //		cleanup {
 //			cleanWs()
 //		}
-	}
+//	}
 }
 
