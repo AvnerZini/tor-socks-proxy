@@ -9,12 +9,12 @@ pipeline {
 		stage('prep') {
 			steps {
 				script {
-					if (env.BRANCH_NAME.startsWith('release')) {
+					if (env.BRANCH_NAME.startsWith('origin/release')) {
 						echo 'I only execute on the release branch'
 						env.PORT=7293
 
 
-					} else if (env.BRANCH_NAME == 'develop' || env.BRANCH_NAME.startsWith('feature')) {
+					} else if (env.BRANCH_NAME == 'origin/develop' || env.BRANCH_NAME.startsWith('origin/feature')) {
 						echo 'I execute develop or feature'
 						env.PORT=5234
 
