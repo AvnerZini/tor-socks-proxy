@@ -1,0 +1,51 @@
+pipeline {
+	agent {
+		node {
+			label 'master'
+		}
+	}
+
+	parameters([
+			[$class: 'ChoiceParameter',
+			 choiceType: 'PT_SINGLE_SELECT',
+			 description: '===============Image==================',
+			 filterLength: 1,
+			 filterable: true,
+			 name: 'Image',
+			 randomName: 'choice-parameter-5273959483921',
+			 script: [
+					 $class: 'GroovyScript',
+					 script: [
+							 classpath: [],
+							 sandbox: false,
+							 script:
+									 'return["Image"]'
+					 ]
+			 ]
+			]
+	])
+
+
+	stages {
+		stage('Build a docker image') {
+			steps {
+				sh """
+					echo "${params.Image}"
+                    """
+			}
+		}
+	}
+
+//	post {
+//		success{
+//			echo "======== Trigger Jenkinsfile.Test ========"
+//			script{
+//				build job: 'job name', parameters: [string(name: 'image_name', value: "avzini/tor-socks-proxy:${env.BUILD_NUMBER}")]
+//			}
+//		}
+//		cleanup {
+//			cleanWs()
+//		}
+//	}
+}
+
