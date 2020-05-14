@@ -6,7 +6,7 @@ pipeline {
 	}
 
 	parameters {
-		extendedChoice bindings: '', description: '', groovyClasspath: '/var/jenkins_home/JenkinsScripts/', groovyScriptFile: '/var/jenkins_home/JenkinsScripts/fetchingImage.groovy', multiSelectDelimiter: ',', name: 'Image', quoteValue: false, saveJSONParameterToFile: false, type: 'PT_SINGLE_SELECT', visibleItemCount: 10
+		extendedChoice bindings: '', description: '', groovyClasspath: '', groovyScriptFile: '/var/jenkins_home/JenkinsScripts/fetchingImage.groovy', multiSelectDelimiter: ',', name: 'Image', quoteValue: false, saveJSONParameterToFile: false, type: 'PT_SINGLE_SELECT', visibleItemCount: 10
 	}
 			 stages {
 				 stage('Build a docker image') {
