@@ -5,39 +5,7 @@ pipeline {
 		}
 	}
 
-	parameters {
-	[$class: 'ChoiceParameter',
-	 choiceType: 'PT_SINGLE_SELECT',
-	 name: 'Categories',
-	 script: [
-			 $class: 'GroovyScript',
-			 script: [
-					 classpath: [],
-					 sandbox: false,
-					 script: 'return["Image"]'
-					 ]
-			 ]
-			]
-	}
-//			 parameters([
-//					 [$class: 'ChoiceParameter',
-//					  choiceType: 'PT_SINGLE_SELECT',
-//					  description: '===============Image==================',
-//					  filterLength: 1,
-//					  filterable: true,
-//					  name: 'Image',
-//					  randomName: 'choice-parameter-5273959483921',
-//					  script: [
-//							  $class: 'GroovyScript',
-//							  script: [
-//									  classpath: [],
-//									  sandbox: false,
-//									  script:
-//											  'return["Image"]'
-//							  ]
-//					  ]
-//					 ]
-//			 ])
+	properties([parameters([[$class: 'ChoiceParameter', choiceType: 'PT_SINGLE_SELECT', description: '', filterLength: 1, filterable: false, name: 'Image', randomName: 'choice-parameter-8648659754233']])])
 
 
 			 stages {
