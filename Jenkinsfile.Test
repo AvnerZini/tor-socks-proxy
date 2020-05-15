@@ -7,11 +7,7 @@ pipeline {
 
 	parameters {
 		extendedChoice bindings: '', description: '', groovyClasspath: '', groovyScriptFile: '/var/jenkins_home/workspace/socks-proxy-test/fetchingImage.groovy', multiSelectDelimiter: ',', name: 'Image', quoteValue: false, saveJSONParameterToFile: false, type: 'PT_SINGLE_SELECT', visibleItemCount: 20
-	}
-
-	environment {
-		BUILD_NUMBER = ''
-
+		string(defaultValue: "9150", description: 'PORT_FROM_BRANCH', name: 'PORT')
 	}
 
 	stages {
@@ -34,7 +30,7 @@ pipeline {
 		stage('Build & Run ping image') {
 			steps {
 				sh """
-					docker build --build-arg PORT=$PORT -t ping_tor -f Dockerfile_PingTor .
+					docker build -t ping_tor -f Dockerfile_PingTor .
 					docker run --rm --net host ping_tor:latest --port $PORT
                     """
 			}
