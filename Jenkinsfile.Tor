@@ -20,6 +20,13 @@ pipeline {
 				}
 			}
 		}
+		stage('clean docker env') {
+			steps {
+				sh '''
+					docker rm $(docker ps -a)
+                   '''
+			}
+		}
 		stage('Build a docker image') {
 			steps {
 				sh """
@@ -34,30 +41,21 @@ pipeline {
 					docker push avzini/tor-socks-proxy:${env.BUILD_NUMBER}
                     """
 			}
-		}
-		stage('======== Trigger Jenkinsfile.Test ========') {
-			steps {
-				build job: '../socks-proxy-test',
-						parameters: [
-								[$class: 'StringParameterValue', name: 'Image', value: "avzini/tor-socks-proxy:${env.BUILD_NUMBER}"],
-								[$class: 'StringParameterValue', name: 'port', value: "$PORT"]
-						], propagate: false
-			}
+
 		}
 
 	}
 
+	post {
+		success {
+			echo "======== Trigger Jenkinsfile.Test ========"
+			build job: '../socks-proxy-test',
+					parameters: [
+							[$class: 'StringParameterValue', name: 'Image', value: "avzini/tor-socks-proxy:${env.BUILD_NUMBER}"],
+							[$class: 'StringParameterValue', name: 'port', value: "$PORT"]
+					], propagate: false
 
-//	post {
-//		success {
-//			echo "======== Trigger Jenkinsfile.Test ========"
-//			script {
-//				build job: '../socks-proxy-test',
-//						parameters: [
-//								[$class: 'StringParameterValue', name: 'image_name', value: "avzini/tor-socks-proxy:${env.BUILD_NUMBER}"],
-//								[$class: 'StringParameterValue', name: 'port', value: "$PORT"]
-//						]
-//			}
-//		}
-//	}
+		}
+	}
+
 }

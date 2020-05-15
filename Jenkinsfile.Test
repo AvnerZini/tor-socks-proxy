@@ -15,6 +15,13 @@ pipeline {
 	}
 
 	stages {
+		stage('clean docker env') {
+			steps {
+				sh '''
+					docker rm $(docker ps -a)
+                   '''
+			}
+		}
 		stage('Build a docker image') {
 			steps {
 				sh """
