@@ -39,7 +39,7 @@ pipeline {
 			steps {
 				build job: '../socks-proxy-test',
 						parameters: [
-								[$class: 'StringParameterValue', name: 'image_name', value: "avzini/tor-socks-proxy:${env.BUILD_NUMBER}"],
+								[$class: 'StringParameterValue', name: 'Image', value: "avzini/tor-socks-proxy:${env.BUILD_NUMBER}"],
 								[$class: 'StringParameterValue', name: 'port', value: "$PORT"]
 						], propagate: false
 			}
