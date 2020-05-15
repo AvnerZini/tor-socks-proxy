@@ -42,6 +42,7 @@ pipeline {
 	post {
 		success {
 			echo "======== Trigger Jenkinsfile.Test ========"
+			echo "$PORT"
 			build job: '../socks-proxy-test',
 					parameters: [
 							[$class: 'StringParameterValue', name: 'Image', value: "avzini/tor-socks-proxy:${env.BUILD_NUMBER}"],

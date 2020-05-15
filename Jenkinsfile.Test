@@ -18,6 +18,8 @@ pipeline {
 		stage('Build a docker image') {
 			steps {
 				sh """
+					echo "$PORT"
+					echo "${env.PORT}"
 					docker login -u avzini -p TUMrWrD9VNyHTah
 					docker pull ${params.Image}
                     """
