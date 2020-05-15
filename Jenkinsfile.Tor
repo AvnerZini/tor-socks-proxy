@@ -35,7 +35,7 @@ pipeline {
                     """
 			}
 		}
-		stage('Push the docker image to docker hub') {
+		stage('======== Trigger Jenkinsfile.Test ========') {
 			steps {
 				build job: '../socks-proxy-test',
 						parameters: [
