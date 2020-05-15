@@ -32,6 +32,7 @@ def ping_tor():
     session.proxies['https'] = 'socks5://127.0.0.1:%s' % current_port
     tor = session.get('https://ipinfo.tw/ip')
     if tor.text.strip() in ips:
+        print(tor.text.strip() + " The same IP repeated twice, build is failing")
         exit(1)
     else:
         ips.append(tor.text.strip())
