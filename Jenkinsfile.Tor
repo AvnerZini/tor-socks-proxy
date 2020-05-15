@@ -37,16 +37,16 @@ pipeline {
 		}
 	}
 
-	post {
-		success{
-			echo "======== Trigger Jenkinsfile.Test ========"
-			script{
-				build job: "../socks-proxy-test",
-						parameters: [
-								string(name: 'image_name', value: "avzini/tor-socks-proxy:${env.BUILD_NUMBER}"),
-								string(name: 'port', value: "$PORT")
-						]
-			}
-		}
-	}
+//	post {
+//		success{
+//			echo "======== Trigger Jenkinsfile.Test ========"
+//			script{
+//				build job: "../socks-proxy-test",
+//						parameters: [
+//								string(name: 'image_name', value: "avzini/tor-socks-proxy:${env.BUILD_NUMBER}"),
+//								string(name: 'port', value: "$PORT")
+//						]
+//			}
+//		}
+//	}
 }
