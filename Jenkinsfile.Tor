@@ -41,7 +41,7 @@ pipeline {
 						parameters: [
 								[$class: 'StringParameterValue', name: 'image_name', value: "avzini/tor-socks-proxy:${env.BUILD_NUMBER}"],
 								[$class: 'StringParameterValue', name: 'port', value: "$PORT"]
-						]
+						], propagate: false
 			}
 		}
 
