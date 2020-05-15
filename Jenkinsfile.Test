@@ -23,7 +23,7 @@ pipeline {
 			steps {
 				sh """
 					docker build -t tor-socks-proxy .
-					docker run -d --name tor-socks-proxy-$PORT -p 127.0.0.1:$PORT:9150 ${params.Image}
+					docker run -d --name tor-socks-proxy-${params.PORT} -p 127.0.0.1:${params.PORT}:9150 ${params.Image}
                     """
 			}
 		}
@@ -31,7 +31,7 @@ pipeline {
 			steps {
 				sh """
 					docker build -t ping_tor -f Dockerfile_PingTor .
-					docker run --rm --net host ping_tor:latest --port $PORT
+					docker run --rm --net host ping_tor:latest --port ${params.PORT}
                     """
 			}
 		}
