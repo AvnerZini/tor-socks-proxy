@@ -19,7 +19,7 @@ pipeline {
 			steps {
 				sh """
 					docker login -u avzini -p TUMrWrD9VNyHTah
-					docker pull avzini/tor-socks-proxy:${params.Image}
+					docker pull ${params.Image}
                     """
 			}
 		}
@@ -27,7 +27,7 @@ pipeline {
 			steps {
 				sh """
 					docker build -t tor-socks-proxy .
-					docker run -d --name tor-socks-proxy -p 127.0.0.1:$PORT:9150 avzini/tor-socks-proxy:${params.Image}
+					docker run -d --name tor-socks-proxy -p 127.0.0.1:$PORT:9150 ${params.Image}
                     """
 			}
 		}
