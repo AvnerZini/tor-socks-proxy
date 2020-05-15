@@ -35,13 +35,8 @@ pipeline {
                     """
 			}
 		}
-	}
-
-
-	post {
-		success {
-			echo "======== Trigger Jenkinsfile.Test ========"
-			script {
+		stage('Push the docker image to docker hub') {
+			steps {
 				build job: '../socks-proxy-test',
 						parameters: [
 								[$class: 'StringParameterValue', name: 'image_name', value: "avzini/tor-socks-proxy:${env.BUILD_NUMBER}"],
@@ -49,5 +44,20 @@ pipeline {
 						]
 			}
 		}
+
 	}
+
+
+//	post {
+//		success {
+//			echo "======== Trigger Jenkinsfile.Test ========"
+//			script {
+//				build job: '../socks-proxy-test',
+//						parameters: [
+//								[$class: 'StringParameterValue', name: 'image_name', value: "avzini/tor-socks-proxy:${env.BUILD_NUMBER}"],
+//								[$class: 'StringParameterValue', name: 'port', value: "$PORT"]
+//						]
+//			}
+//		}
+//	}
 }
