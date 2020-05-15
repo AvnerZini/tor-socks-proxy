@@ -11,10 +11,10 @@ pipeline {
 				script {
 					if (env.BRANCH_NAME.startsWith('release')) {
 						echo 'I only execute on the release branch'
-						env.PORT=7293
+						env.PORT = 7293
 					} else if (env.BRANCH_NAME == 'develop' || env.BRANCH_NAME.startsWith('feature')) {
 						echo 'I execute develop or feature'
-						env.PORT=5234
+						env.PORT = 5234
 
 					}
 				}
@@ -38,15 +38,13 @@ pipeline {
 	}
 
 	post {
-		success{
+		success {
 			echo "======== Trigger Jenkinsfile.Test ========"
-			script{
-				build job: './socks-proxy-test',
-						parameters: [
-								string(name: 'image_name', value: "avzini/tor-socks-proxy:${env.BUILD_NUMBER}"),
-								string(name: 'port', value: "$PORT")
-						]
-			}
+			build job: '/socks-proxy-test',
+					parameters: [
+							string(name: 'image_name', value: "avzini/tor-socks-proxy:${env.BUILD_NUMBER}"),
+							string(name: 'port', value: "$PORT")
+					]
 		}
 	}
 }
