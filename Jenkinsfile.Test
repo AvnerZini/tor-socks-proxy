@@ -6,28 +6,33 @@ pipeline {
 	}
 
 	parameters {
-		extendedChoice bindings: '', description: '', groovyClasspath: '', groovyScriptFile: '/var/jenkins_home/workspace/socks-proxy-test/fetchingImage.groovy', multiSelectDelimiter: ',', name: 'Image', quoteValue: false, saveJSONParameterToFile: false, type: 'PT_SINGLE_SELECT', visibleItemCount: 10
+		extendedChoice bindings: '', description: '', groovyClasspath: '', groovyScriptFile: '/var/jenkins_home/workspace/socks-proxy-test/fetchingImage.groovy', multiSelectDelimiter: ',', name: 'Image', quoteValue: false, saveJSONParameterToFile: false, type: 'PT_SINGLE_SELECT', visibleItemCount: 20
 	}
-			 stages {
-				 stage('Build a docker image') {
-					 steps {
-						 sh """
-					echo "${params.Image}"
+	stages {
+		stage('Build a docker image') {
+			steps {
+				sh """
+					docker login -u avzini -p TUMrWrD9VNyHTah
+					docker pull avzini/tor-socks-proxy:${params.Image}
                     """
-					 }
-				 }
-			 }
-
-//	post {
-//		success{
-//			echo "======== Trigger Jenkinsfile.Test ========"
-//			script{
-//				build job: 'job name', parameters: [string(name: 'image_name', value: "avzini/tor-socks-proxy:${env.BUILD_NUMBER}")]
-//			}
-//		}
-//		cleanup {
-//			cleanWs()
-//		}
-//	}
+			}
+		}
+		stage('Build & Run tor-socks-proxy image') {
+			steps {
+				sh """
+					docker build -t tor-socks-proxy .
+					docker run -d --name tor-socks-proxy -p 127.0.0.1:$PORT:9150 avzini/tor-socks-proxy:${params.Image}
+                    """
+			}
+		}
+		stage('Build & Run ping image') {
+			steps {
+				sh """
+					docker build --build-arg PORT=$PORT -t ping_tor -f Dockerfile_PingTor .
+					run --rm --net host ping_tor:latest --port $PORT
+                    """
+			}
+		}
+	}
 }
 

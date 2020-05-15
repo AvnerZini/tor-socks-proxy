@@ -1,0 +1,14 @@
+FROM python:3.7-slim
+
+ARG PORT=9150
+
+RUN apt-get update && \
+    pip3 install requests pysocks
+
+WORKDIR /opt/
+
+COPY ./pingtor.py ./pingtor.py
+
+WORKDIR /opt/
+
+ENTRYPOINT [ "python3", "-u" , "pingtor.py" ]

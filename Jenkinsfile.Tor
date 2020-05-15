@@ -23,7 +23,7 @@ pipeline {
 		stage('Build a docker image') {
 			steps {
 				sh """
-					docker build --build-arg PORT=$PORT -t avzini/tor-socks-proxy:${env.BUILD_NUMBER} . 
+					docker build --build-arg PORT=$PORT -t avzini/tor-socks-proxy:${env.BUILD_NUMBER} .
                     """
 			}
 		}
@@ -37,16 +37,16 @@ pipeline {
 		}
 	}
 
-//	post {
-//		success{
-//			echo "======== Trigger Jenkinsfile.Test ========"
-//			script{
-//				build job: 'job name', parameters: [string(name: 'image_name', value: "avzini/tor-socks-proxy:${env.BUILD_NUMBER}")]
-//			}
-//		}
-//		cleanup {
-//			cleanWs()
-//		}
-//	}
+	post {
+		success{
+			echo "======== Trigger Jenkinsfile.Test ========"
+			script{
+				build job: 'socks-proxy-test',
+						parameters: [
+								string(name: 'image_name', value: "avzini/tor-socks-proxy:${env.BUILD_NUMBER}"),
+								string(name: 'port', value: "$PORT")
+						]
+			}
+		}
+	}
 }
-
