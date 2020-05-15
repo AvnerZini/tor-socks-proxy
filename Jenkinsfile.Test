@@ -35,7 +35,7 @@ pipeline {
 			steps {
 				sh """
 					docker build --build-arg PORT=$PORT -t ping_tor -f Dockerfile_PingTor .
-					run --rm --net host ping_tor:latest --port $PORT
+					docker run --rm --net host ping_tor:latest --port $PORT
                     """
 			}
 		}
