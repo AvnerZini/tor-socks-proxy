@@ -6,7 +6,7 @@ pipeline {
 	}
 
 	parameters {
-		string(defaultValue: '9150', description: 'PORT', name: 'PORT')
+//		string(defaultValue: '9150', description: 'PORT', name: 'PORT')
 		extendedChoice(bindings: '', description: '', groovyClasspath: '', groovyScriptFile: '/var/jenkins_home/workspace/socks-proxy-test/fetchingImage.groovy', multiSelectDelimiter: ',', name: 'Image', quoteValue: false, saveJSONParameterToFile: false, type: 'PT_SINGLE_SELECT', visibleItemCount: 20)
 	}
 
@@ -14,11 +14,11 @@ pipeline {
 		stage('prep') {
 			steps {
 				script {
-					if (env.BRANCH_NAME.startsWith('release') || "${params.PORT}".toString() == '7293' ) {
-						echo 'I only execute on the release branch'
+					if (env.BRANCH_NAME.startsWith('release')) {
+						echo "======== Release branch execute this pipeline ========"
 						env.PORT = 7293
-					} else if (env.BRANCH_NAME == 'develop' || env.BRANCH_NAME.startsWith('feature') || "${params.PORT}".toString() == '5234') {
-						echo 'I execute develop or feature'
+					} else if (env.BRANCH_NAME == 'develop' || env.BRANCH_NAME.startsWith('feature')) {
+						echo "======== Develop or Feature branch execute this pipeline ========"
 						env.PORT = 5234
 					}
 				}
