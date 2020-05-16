@@ -17,7 +17,6 @@ pipeline {
 					sh """
 						echo ${params.BRANCH_NAME}
 					"""
-
 //					if (${params.BRANCH}.startsWithAny(release)) {
 //						echo 'I only execute on the release branch'
 //						env.PORT = 7293
