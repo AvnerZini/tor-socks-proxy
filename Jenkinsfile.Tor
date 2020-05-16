@@ -10,10 +10,10 @@ pipeline {
 			steps {
 				script {
 					if (env.BRANCH_NAME.startsWith('release')) {
-						echo 'I only execute on the release branch'
+						echo "======== Release branch execute this pipeline ========"
 						env.PORT = 7293
 					} else if (env.BRANCH_NAME == 'develop' || env.BRANCH_NAME.startsWith('feature')) {
-						echo 'I execute develop or feature'
+						echo "======== Develop or Feature branch execute this pipeline ========"
 						env.PORT = 5234
 					}
 				}
@@ -38,11 +38,9 @@ pipeline {
 	post {
 		success {
 			echo "======== Trigger Jenkinsfile.Test ========"
-			echo "$PORT"
 			build job: '../socks-proxy-test',
 					parameters: [
-							[$class: 'StringParameterValue', name: 'Image', value: "${env.BUILD_NUMBER}"],
-							[$class: 'StringParameterValue', name: 'BRANCH_NAME', value: "${env.BRANCH_NAME}"]
+							[$class: 'StringParameterValue', name: 'Image', value: "${env.BUILD_NUMBER}"]
 					], propagate: false
 
 		}

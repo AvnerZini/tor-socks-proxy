@@ -6,7 +6,6 @@ pipeline {
 	}
 
 	parameters {
-//		string(defaultValue: '', description: 'branch name', name: 'BRANCH_NAME')
 		extendedChoice (bindings: '', description: '', groovyClasspath: '', groovyScriptFile: '/var/jenkins_home/workspace/socks-proxy-test/fetchingImage.groovy', multiSelectDelimiter: ',', name: 'Image', quoteValue: false, saveJSONParameterToFile: false, type: 'PT_SINGLE_SELECT', visibleItemCount: 20)
 	}
 
@@ -22,16 +21,6 @@ pipeline {
 						env.PORT = 5234
 					}
 				}
-//				script {
-//					if ("${params.BRANCH}".startsWithAny()) {
-//						echo 'I only execute on the release branch'
-//						env.PORT = 7293
-//					} else if ("${params.BRANCH}" == 'develop' || "${params.BRANCH}".startsWithAny(feature)) {
-//						echo 'I execute develop or feature'
-//						env.PORT = 5234
-//
-//					}
-//				}
 			}
 		}
 		stage('Build a docker image') {
@@ -46,6 +35,7 @@ pipeline {
 			steps {
 				sh """
 					docker build -t tor-socks-proxy .
+					docker rm tor-socks-proxy-$PORT
 					docker run -d --name tor-socks-proxy-$PORT -p 127.0.0.1:$PORT:9150 avzini/tor-socks-proxy:${params.Image}
                     """
 			}
