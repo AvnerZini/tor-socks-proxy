@@ -6,7 +6,10 @@ ips = []
 session = requests.session()
 session.proxies = {}
 
-myIp = session.get('https://ipinfo.tw/ip')
+ipInfo = 'https://ipinfo.tw/ip'
+socksAddress = 'socks5://127.0.0.1:%s'
+
+myIp = session.get(ipInfo)
 print("My current IP without Tor: " + myIp.text)
 
 port_cli = 'port'
@@ -16,7 +19,7 @@ parser.add_argument('--port',
                     required=True,
                     dest=port_cli,
                     type=str,
-                    help='Root folder to grab dependencies recursively')
+                    help='define port to ping tor')
 
 args = parser.parse_args()
 print('Arguments:')
@@ -28,17 +31,19 @@ port = getattr(args, port_cli)
 
 def ping_tor():
     current_port = port
-    session.proxies['http'] = 'socks5://127.0.0.1:%s' % current_port
-    session.proxies['https'] = 'socks5://127.0.0.1:%s' % current_port
-    tor = session.get('https://ipinfo.tw/ip')
-    if tor.text.strip() in ips:
-        print(tor.text.strip() + " The same IP repeated twice, build is failing")
-        exit(1)
-    else:
+    session.proxies['http'] = socksAddress % current_port
+    session.proxies['https'] = socksAddress % current_port
+    tor = session.get(ipInfo)
+
+    if tor.text.strip() not in ips:
         ips.append(tor.text.strip())
         session.close()
         print("My IP using Tor: " + tor.text)
         print("All Ips from Tor: ", ips)
+
+    else:
+        print(tor.text.strip() + " The same IP repeated twice, build is failing")
+        exit(1)
 
 
 # Function time.time returns the current time in seconds since 1st Jan 1970

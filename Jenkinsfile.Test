@@ -7,10 +7,24 @@ pipeline {
 
 	parameters {
 		extendedChoice bindings: '', description: '', groovyClasspath: '', groovyScriptFile: '/var/jenkins_home/workspace/socks-proxy-test/fetchingImage.groovy', multiSelectDelimiter: ',', name: 'Image', quoteValue: false, saveJSONParameterToFile: false, type: 'PT_SINGLE_SELECT', visibleItemCount: 20
-		string(defaultValue: "9150", description: 'PORT_FROM_BRANCH', name: 'PORT')
+		string(defaultValue: "release", description: 'branch name', name: 'BRANCH')
 	}
 
 	stages {
+		stage('prep') {
+			steps {
+				script {
+					if (${params.BRANCH}.startsWithAny(release)) {
+						echo 'I only execute on the release branch'
+						env.PORT = 7293
+					} else if (${params.BRANCH} == 'develop' || ${params.BRANCH}.startsWithAny(feature)) {
+						echo 'I execute develop or feature'
+						env.PORT = 5234
+
+					}
+				}
+			}
+		}v
 		stage('Build a docker image') {
 			steps {
 				sh """
@@ -23,7 +37,7 @@ pipeline {
 			steps {
 				sh """
 					docker build -t tor-socks-proxy .
-					docker run -d --name tor-socks-proxy-${params.PORT} -p 127.0.0.1:${params.PORT}:9150 ${params.Image}
+					docker run -d --name tor-socks-proxy-$PORT -p 127.0.0.1:$PORT:9150 ${params.Image}
                     """
 			}
 		}
@@ -31,7 +45,7 @@ pipeline {
 			steps {
 				sh """
 					docker build -t ping_tor -f Dockerfile_PingTor .
-					docker run --rm --net host ping_tor:latest --port ${params.PORT}
+					docker run --rm --net host ping_tor:latest --port $PORT
                     """
 			}
 		}
