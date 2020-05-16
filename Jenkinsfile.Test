@@ -6,7 +6,7 @@ pipeline {
 	}
 
 	parameters {
-//		string(defaultValue: '9150', description: 'PORT', name: 'PORT')
+		string(defaultValue: '9150', description: 'PORT', name: 'PORT')
 		extendedChoice(bindings: '', description: '', groovyClasspath: '', groovyScriptFile: '/var/jenkins_home/workspace/socks-proxy-test/fetchingImage.groovy', multiSelectDelimiter: ',', name: 'Image', quoteValue: false, saveJSONParameterToFile: false, type: 'PT_SINGLE_SELECT', visibleItemCount: 20)
 	}
 
@@ -14,39 +14,47 @@ pipeline {
 		stage('prep') {
 			steps {
 				script {
-					if (env.BRANCH_NAME.startsWith('release')) {
-						echo "======== Release branch execute this pipeline ========"
+					if (currentBuild.rawBuild.getCauses()[0].toString().contains('UserIdCause')) {
+						if (env.BRANCH_NAME.startsWith('release')) {
+							echo "======== Release branch execute this pipeline ========"
+							env.PORT = 7293
+						} else if (env.BRANCH_NAME == 'develop' || env.BRANCH_NAME.startsWith('feature')) {
+							echo "======== Develop or Feature branch execute this pipeline ========"
+							env.PORT = 5234
+						}
+					} else if ("${params.PORT}".toString() == '7293') {
+						echo "======== trigger automatically ========"
 						env.PORT = 7293
-					} else if (env.BRANCH_NAME == 'develop' || env.BRANCH_NAME.startsWith('feature')) {
-						echo "======== Develop or Feature branch execute this pipeline ========"
+					} else if ("${params.PORT}".toString() == '5234') {
+						echo "======== trigger automatically ========"
 						env.PORT = 5234
 					}
 				}
 			}
-		}
-		stage('Build a docker image') {
-			steps {
-				sh """
+			stage('Build a docker image') {
+				steps {
+					sh """
 					docker login -u avzini -p TUMrWrD9VNyHTah
 					docker pull avzini/tor-socks-proxy:${params.Image}
                     """
+				}
 			}
-		}
-		stage('Build & Run tor-socks-proxy image') {
-			steps {
-				sh """
+			stage('Build & Run tor-socks-proxy image') {
+				steps {
+					sh """
 					docker build -t tor-socks-proxy .
 					docker rm tor-socks-proxy-${PORT}
 					docker run -d --name tor-socks-proxy-${PORT} -p 127.0.0.1:${PORT}:9150 avzini/tor-socks-proxy:${params.Image}
                     """
+				}
 			}
-		}
-		stage('Build & Run ping image') {
-			steps {
-				sh """
+			stage('Build & Run ping image') {
+				steps {
+					sh """
 					docker build -t ping_tor -f Dockerfile_PingTor .
 					docker run --rm --net host ping_tor:latest --port ${PORT}
                     """
+				}
 			}
 		}
 	}
