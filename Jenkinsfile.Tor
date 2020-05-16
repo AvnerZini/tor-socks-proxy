@@ -40,7 +40,8 @@ pipeline {
 			echo "======== Trigger Jenkinsfile.Test ========"
 			build job: '../socks-proxy-test',
 					parameters: [
-							[$class: 'StringParameterValue', name: 'Image', value: "${env.BUILD_NUMBER}"]
+							[$class: 'StringParameterValue', name: 'Image', value: "${env.BUILD_NUMBER}"],
+							[$class: 'StringParameterValue', name: 'BRANCH_NAME', value: "${env.BRANCH_NAME}"]
 					], propagate: false
 
 		}
