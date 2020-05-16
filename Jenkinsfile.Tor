@@ -22,7 +22,7 @@ pipeline {
 		stage('Build a docker image') {
 			steps {
 				sh """
-					docker build --build-arg PORT=$PORT -t avzini/tor-socks-proxy:${env.BUILD_NUMBER} .
+					docker build --build-arg PORT=${PORT} -t avzini/tor-socks-proxy:${env.BUILD_NUMBER} .
                     """
 			}
 		}
@@ -41,7 +41,7 @@ pipeline {
 			build job: '../socks-proxy-test',
 					parameters: [
 							[$class: 'StringParameterValue', name: 'Image', value: "${env.BUILD_NUMBER}"],
-							[$class: 'StringParameterValue', name: 'PORT', value: $PORT]
+							[$class: 'StringParameterValue', name: 'PORT', value: "${PORT}"]
 					], propagate: false
 
 		}

@@ -37,8 +37,8 @@ pipeline {
 		steps {
 			sh """
 					docker build -t tor-socks-proxy .
-					docker rm tor-socks-proxy-$PORT
-					docker run -d --name tor-socks-proxy-$PORT -p 127.0.0.1:$PORT:9150 avzini/tor-socks-proxy:${params.Image}
+					docker rm tor-socks-proxy-${PORT}
+					docker run -d --name tor-socks-proxy-${PORT} -p 127.0.0.1:${PORT}:9150 avzini/tor-socks-proxy:${params.Image}
                     """
 		}
 	}
@@ -46,7 +46,7 @@ pipeline {
 		steps {
 			sh """
 					docker build -t ping_tor -f Dockerfile_PingTor .
-					docker run --rm --net host ping_tor:latest --port $PORT
+					docker run --rm --net host ping_tor:latest --port ${PORT}
                     """
 		}
 	}
