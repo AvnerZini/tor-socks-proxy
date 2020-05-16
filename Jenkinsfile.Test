@@ -6,7 +6,7 @@ pipeline {
 	}
 
 	parameters {
-		string(defaultValue: '', description: 'branch name', name: 'BRANCH_NAME')
+//		string(defaultValue: '', description: 'branch name', name: 'BRANCH_NAME')
 		extendedChoice (bindings: '', description: '', groovyClasspath: '', groovyScriptFile: '/var/jenkins_home/workspace/socks-proxy-test/fetchingImage.groovy', multiSelectDelimiter: ',', name: 'Image', quoteValue: false, saveJSONParameterToFile: false, type: 'PT_SINGLE_SELECT', visibleItemCount: 20)
 	}
 
@@ -14,18 +14,24 @@ pipeline {
 		stage('prep') {
 			steps {
 				script {
-					sh """
-						echo ${params.BRANCH_NAME}
-					"""
-					if ("${params.BRANCH}".startsWithAny(release)) {
+					if (env.BRANCH_NAME.startsWith('release')) {
 						echo 'I only execute on the release branch'
 						env.PORT = 7293
-					} else if ("${params.BRANCH}" == 'develop' || "${params.BRANCH}".startsWithAny(feature)) {
+					} else if (env.BRANCH_NAME == 'develop' || env.BRANCH_NAME.startsWith('feature')) {
 						echo 'I execute develop or feature'
 						env.PORT = 5234
-
 					}
 				}
+//				script {
+//					if ("${params.BRANCH}".startsWithAny()) {
+//						echo 'I only execute on the release branch'
+//						env.PORT = 7293
+//					} else if ("${params.BRANCH}" == 'develop' || "${params.BRANCH}".startsWithAny(feature)) {
+//						echo 'I execute develop or feature'
+//						env.PORT = 5234
+//
+//					}
+//				}
 			}
 		}
 		stage('Build a docker image') {
