@@ -7,13 +7,18 @@ pipeline {
 
 	parameters {
 		string(defaultValue: '', description: 'branch name', name: 'BRANCH_NAME')
-		extendedChoice (bindings: '', description: '', groovyClasspath: '', groovyScriptFile: '/var/jenkins_home/workspace/socks-proxy-test/fetchingImage.groovy', multiSelectDelimiter: ',', name: 'Image', quoteValue: false, saveJSONParameterToFile: false, type: 'PT_SINGLE_SELECT', visibleItemCount: 20)
+		extendedChoice(bindings: '', description: '', groovyClasspath: '', groovyScriptFile: '/var/jenkins_home/workspace/socks-proxy-test/fetchingImage.groovy', multiSelectDelimiter: ',', name: 'Image', quoteValue: false, saveJSONParameterToFile: false, type: 'PT_SINGLE_SELECT', visibleItemCount: 20)
 	}
 
 	stages {
 		stage('prep') {
 			steps {
 				script {
+					if ("${params.BRANCH_NAME}".contains(release)) {
+						env.PORT = 7293
+					} else if ("${params.BRANCH_NAME}".contains(feature) || "${params.BRANCH_NAME}".equals(develop)) {
+						env.PORT = 5234
+					}
 					if (env.BRANCH_NAME.startsWith('release')) {
 						echo 'I only execute on the release branch'
 						env.PORT = 7293
@@ -24,30 +29,31 @@ pipeline {
 				}
 			}
 		}
-		stage('Build a docker image') {
-			steps {
-				sh """
+	}
+	stage('Build a docker image') {
+		steps {
+			sh """
 					docker login -u avzini -p TUMrWrD9VNyHTah
 					docker pull avzini/tor-socks-proxy:${params.Image}
                     """
-			}
 		}
-		stage('Build & Run tor-socks-proxy image') {
-			steps {
-				sh """
+	}
+	stage('Build & Run tor-socks-proxy image') {
+		steps {
+			sh """
 					docker build -t tor-socks-proxy .
 					docker rm tor-socks-proxy-$PORT
 					docker run -d --name tor-socks-proxy-$PORT -p 127.0.0.1:$PORT:9150 avzini/tor-socks-proxy:${params.Image}
                     """
-			}
 		}
-		stage('Build & Run ping image') {
-			steps {
-				sh """
+	}
+	stage('Build & Run ping image') {
+		steps {
+			sh """
 					docker build -t ping_tor -f Dockerfile_PingTor .
 					docker run --rm --net host ping_tor:latest --port $PORT
                     """
-			}
 		}
 	}
 }
+
