@@ -6,8 +6,8 @@ pipeline {
 	}
 
 	parameters {
-		extendedChoice bindings: '', description: '', groovyClasspath: '', groovyScriptFile: '/var/jenkins_home/workspace/socks-proxy-test/fetchingImage.groovy', multiSelectDelimiter: ',', name: 'Image', quoteValue: false, saveJSONParameterToFile: false, type: 'PT_SINGLE_SELECT', visibleItemCount: 20
-		string(defaultValue: '', description: 'branch name', name: 'BRANCH')
+		string(defaultValue: '', description: 'branch name', name: 'BRANCH_NAME')
+		extendedChoice (bindings: '', description: '', groovyClasspath: '', groovyScriptFile: '/var/jenkins_home/workspace/socks-proxy-test/fetchingImage.groovy', multiSelectDelimiter: ',', name: 'Image', quoteValue: false, saveJSONParameterToFile: false, type: 'PT_SINGLE_SELECT', visibleItemCount: 20)
 	}
 
 	stages {
@@ -29,7 +29,7 @@ pipeline {
 			steps {
 				sh """
 					docker login -u avzini -p TUMrWrD9VNyHTah
-					docker pull ${params.Image}
+					docker pull avzini/tor-socks-proxy:${params.Image}
                     """
 			}
 		}
@@ -37,7 +37,7 @@ pipeline {
 			steps {
 				sh """
 					docker build -t tor-socks-proxy .
-					docker run -d --name tor-socks-proxy-$PORT -p 127.0.0.1:$PORT:9150 ${params.Image}
+					docker run -d --name tor-socks-proxy-$PORT -p 127.0.0.1:$PORT:9150 avzini/tor-socks-proxy:${params.Image}
                     """
 			}
 		}
