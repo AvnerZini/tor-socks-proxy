@@ -14,14 +14,18 @@ pipeline {
 		stage('prep') {
 			steps {
 				script {
-					if (${params.BRANCH}.startsWithAny(release)) {
-						echo 'I only execute on the release branch'
-						env.PORT = 7293
-					} else if (${params.BRANCH} == 'develop' || ${params.BRANCH}.startsWithAny(feature)) {
-						echo 'I execute develop or feature'
-						env.PORT = 5234
+					sh """
+						echo ${params.BRANCH_NAME}
+					"""
 
-					}
+//					if (${params.BRANCH}.startsWithAny(release)) {
+//						echo 'I only execute on the release branch'
+//						env.PORT = 7293
+//					} else if (${params.BRANCH} == 'develop' || ${params.BRANCH}.startsWithAny(feature)) {
+//						echo 'I execute develop or feature'
+//						env.PORT = 5234
+//
+//					}
 				}
 			}
 		}v
