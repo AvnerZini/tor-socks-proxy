@@ -16,6 +16,7 @@ pipeline {
 						echo "======== Develop or Feature branch execute this pipeline ========"
 						env.PORT = 5234
 					}
+					env.TAG = "${env.BRANCH_NAME}_${env.BUILD_NUMBER}"
 				}
 				sh """
 					sed -i 's/{PORT}/${env.PORT} /' ./torrc
@@ -26,7 +27,7 @@ pipeline {
 		stage('Build a docker image') {
 			steps {
 				sh """
-					docker build --build-arg PORT=${env.PORT} -t avzini/tor-socks-proxy:${env.BUILD_NUMBER} .
+					docker build --build-arg PORT=${env.PORT} -t avzini/tor-socks-proxy:${env.TAG} .
                     """
 			}
 		}
@@ -45,7 +46,7 @@ pipeline {
 			echo "======== Trigger Jenkinsfile.Test ========"
 			build job: '../socks-proxy-test',
 					parameters: [
-							[$class: 'StringParameterValue', name: 'Image', value: "${env.BUILD_NUMBER}"],
+							[$class: 'StringParameterValue', name: 'Image', value: "${env.TAG}"],
 							[$class: 'StringParameterValue', name: 'PORT', value: "${env.PORT}"]
 					], propagate: false
 
