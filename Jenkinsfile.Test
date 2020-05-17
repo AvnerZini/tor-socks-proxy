@@ -22,6 +22,7 @@ pipeline {
 		stage('Build & Run tor-socks-proxy image') {
 			steps {
 				sh """
+					docker rmi tor-socks-proxy:latest || true
 					docker build -t tor-socks-proxy .
 					docker stop tor-socks-proxy || true && docker rm tor-socks-proxy || true 
 					docker run -d --name tor-socks-proxy -p 127.0.0.1:${params.PORT}:9150 avzini/tor-socks-proxy:${params.Image}
@@ -31,6 +32,7 @@ pipeline {
 		stage('Build & Run ping image') {
 			steps {
 				sh """
+					docker rmi ping_tor:latest || true
 					docker build -t ping_tor -f Dockerfile_PingTor .
 					docker run --rm --net host ping_tor:latest --port ${params.PORT}
                     """
