@@ -23,7 +23,7 @@ pipeline {
 			steps {
 				sh """
 					docker stop tor-socks-proxy || true && docker rm tor-socks-proxy || true
-					docker run -d --rm --name tor-socks-proxy -p 127.0.0.1:${params.PORT}:9150 avzini/tor-socks-proxy:${params.Image}
+					docker run -d --rm --name tor-socks-proxy -p 127.0.0.1:9150:${params.PORT} avzini/tor-socks-proxy:${params.Image}
                     """
 			}
 		}

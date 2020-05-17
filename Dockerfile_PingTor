@@ -9,4 +9,5 @@ COPY ./pingtor.py ./pingtor.py
 
 WORKDIR /opt/
 
-ENTRYPOINT [ "python3", "-u" , "pingtor.py" ]
+ENTRYPOINT [ "python3", "-u" ]
+CMD [ "pingtor.py" ]
