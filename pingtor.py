@@ -1,6 +1,5 @@
 import requests
 import time
-import argparse
 
 ips = []
 session = requests.session()
