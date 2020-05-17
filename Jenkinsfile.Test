@@ -19,12 +19,9 @@ pipeline {
                     """
 			}
 		}
-		stage('Build & Run tor-socks-proxy image') {
+		stage('Run tor-socks-proxy image') {
 			steps {
 				sh """
-					docker rmi tor-socks-proxy:latest || true
-					docker build -t tor-socks-proxy .
-					docker stop tor-socks-proxy || true && docker rm tor-socks-proxy || true 
 					docker run -d --name tor-socks-proxy -p 127.0.0.1:9150:${params.PORT} avzini/tor-socks-proxy:${params.Image}
                     """
 			}
