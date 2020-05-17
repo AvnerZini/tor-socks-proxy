@@ -7,33 +7,15 @@ session = requests.session()
 session.proxies = {}
 
 ipInfo = 'https://ipinfo.tw/ip'
-socksAddress = 'socks5-hostname://127.0.0.1:%s'
+socksAddress = 'socks5h://127.0.0.1:9150'
 
 myIp = session.get(ipInfo)
 print("My current IP without Tor: " + myIp.text)
 
-port_cli = 'port'
-
-parser = argparse.ArgumentParser(description='Process command line arguments')
-parser.add_argument('--port',
-                    required=True,
-                    dest=port_cli,
-                    type=str,
-                    help='define port to ping tor')
-
-args = parser.parse_args()
-print('Arguments:')
-for arg in vars(args):
-    print('  %s: %s' % (arg, getattr(args, arg)))
-
-port = getattr(args, port_cli)
-print("PORT=============================: " + port_cli)
-
 
 def ping_tor():
-    current_port = port
-    session.proxies['http'] = socksAddress % current_port
-    session.proxies['https'] = socksAddress % current_port
+    session.proxies['http'] = socksAddress
+    session.proxies['https'] = socksAddress
     tor = session.get(ipInfo)
 
     if tor.text.strip() not in ips:

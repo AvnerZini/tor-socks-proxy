@@ -32,10 +32,9 @@ pipeline {
 				sh """
 					docker rmi ping_tor:latest || true
 					docker build -t ping_tor -f Dockerfile_PingTor .
-					docker run --rm --net host ping_tor:latest --port ${params.PORT}
+					docker run --rm --net host ping_tor:latest
                     """
 			}
 		}
 	}
 }
-
