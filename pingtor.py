@@ -7,7 +7,7 @@ session = requests.session()
 session.proxies = {}
 
 ipInfo = 'https://ipinfo.tw/ip'
-socksAddress = 'socks5://127.0.0.1:%s'
+socksAddress = 'socks5-hostname://127.0.0.1:%s'
 
 myIp = session.get(ipInfo)
 print("My current IP without Tor: " + myIp.text)
@@ -27,6 +27,7 @@ for arg in vars(args):
     print('  %s: %s' % (arg, getattr(args, arg)))
 
 port = getattr(args, port_cli)
+print("PORT=============================: " + port_cli)
 
 
 def ping_tor():
