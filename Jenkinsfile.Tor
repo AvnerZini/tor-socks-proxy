@@ -35,8 +35,8 @@ pipeline {
 			steps {
 				sh """
 					docker login -u avzini -p TUMrWrD9VNyHTah
-					docker push avzini/tor-socks-proxy:${env.BUILD_NUMBER}
-					docker rmi avzini/tor-socks-proxy:${env.BUILD_NUMBER} || true
+					docker push avzini/tor-socks-proxy:${env.TAG}
+					docker rmi avzini/tor-socks-proxy:${env.TAG} || true
                     """
 			}
 		}
