@@ -17,6 +17,10 @@ pipeline {
 						env.PORT = 5234
 					}
 				}
+				sh """
+					sed "s/.*SocksPort 0.0.0.0:.*/SocksPort 0.0.0.0:${PORT}/"  | tee torrc
+					cat torrc
+					"""
 			}
 		}
 		stage('Build a docker image') {
