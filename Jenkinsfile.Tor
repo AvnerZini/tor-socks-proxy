@@ -33,11 +33,13 @@ pipeline {
 		}
 		stage('Push the docker image to docker hub') {
 			steps {
-				sh """
-					docker login -u avzini -p TUMrWrD9VNyHTah
+				withCredentials([string(credentialsId: '1a2bf80b-957e-4629-bc30-2b9d3cd4fbb2', variable: 'dockerPassword')]) {
+					sh """
+					docker login -u avzini -p ${dockerPassword}
 					docker push avzini/tor-socks-proxy:${env.TAG}
 					docker rmi avzini/tor-socks-proxy:${env.TAG} || true
                     """
+				}
 			}
 		}
 	}
